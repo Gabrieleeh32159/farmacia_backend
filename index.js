@@ -84,14 +84,17 @@ app.delete('/farmacos/int:farmacoId', (req, res) => {
 app.patch('/farmacos', (req, res) => {
     const farmacoId = parseInt(req.query.id);
     const quantity = parseInt(req.query.quantity);
+    var buyed = null;
     DATA = DATA.map((farmaco) => {
         if (farmaco.id == farmacoId) {
-            farmaco.quantity -= quantity;
+            farmaco.quantity = Math.max(0, farmaco.quantity - quantity);
+            buyed = farmaco;
         }
         return farmaco;
     })
 
     res.json({
+        "buyed": buyed,
         "farmacos": DATA
     })
 })
