@@ -1,4 +1,4 @@
-const DATA = [
+var DATA = [
     {
         "id": 0,
         "name": "Paracetamol",
@@ -49,9 +49,9 @@ app.get('/', (req, res) => {
 })
 
 app.get('/farmacos', (req, res) => {
-    const id = req.query.id
+    const id = parseInt(req.query.id)
     const name = req.query.name
-    const price = req.query.price
+    const price = parseInt(req.query.price)
 
     ndata = DATA
 
@@ -68,20 +68,32 @@ app.get('/farmacos', (req, res) => {
     }
 
     res.json({
-        "farmacos": DATA
+        "farmacos": ndata
     })
 
 })
 
-app.delete('/farmacos/:farmacoId', (req, res) => {
+app.delete('/farmacos/int:farmacoId', (req, res) => {
+    const farmacoId = req.params.farmacoId;
     DATA = DATA.filter((obj) => (obj.id != farmacoId))
     res.json({
         "data": DATA
     })
 })
 
-app.patch('farmacos/:farmacoId', (req, res) => {
-    
+app.patch('/farmacos', (req, res) => {
+    const farmacoId = parseInt(req.query.id);
+    const quantity = parseInt(req.query.quantity);
+    DATA = DATA.map((farmaco) => {
+        if (farmaco.id == farmacoId) {
+            farmaco.quantity -= quantity;
+        }
+        return farmaco;
+    })
+
+    res.json({
+        "farmacos": DATA
+    })
 })
 
 app.use((req, res) => {
